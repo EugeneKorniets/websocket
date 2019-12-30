@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8">
+    <title>WebSocket App</title>
+    <style>
+      body {
+        color: darkslategray;
+      }
+
+      .page-heading {
+
+      }
+
+      .application-log__title {
+        font-weight: bold;
+      }
+
+      .application-log__log-list {
+        color: teal;
+      }
+
+      .application-log__log-list li {
+        margin: 8px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 class="page-heading">WebSocket Application</h1>
+
+    <h2 class="status">
+      Connection Status: <span id="status"></span>
+    </h2>
+
+    <div class="application-log">
+      <h2 class="application-log__title">Application Log:</h2>
+      <ol id="log" class="application-log__log-list"></ol>
+    </div>
+
+    <script>
+      const log = document.getElementById('log')
+      const status = document.getElementById('status')
+      const websocket = new WebSocket('ws://localhost:8080')
+
+      websocket.onopen = () => {
+        setConnectionStatus('OPENED')
+        addNewLogEntry('Connection is opened')
+        websocket.send("Hello WebSocketServer")
+      }
+
+      websocket.onclose = event => {
+        setConnectionStatus('CLOSED')
+        addNewLogEntry(`Connection is closed. Reason: "${event.reason}"`)
+      }
+
+      websocket.onmessage = event => {
+        addNewLogEntry(`Message from server: "${event.data}"`)
+      }
+
+      websocket.onerror = error => {
+        addNewLogEntry(`WebSocket error: "${error.message}"`)
+      }
+
+      function setConnectionStatus (newStatus) {
+        status.innerText = newStatus
+      }
+
+      function addNewLogEntry (newLogEntry) {
+        const newEntry =  document.createElement('li')
+        newEntry.append(newLogEntry)
+        log.append(newEntry)
+      }
+    </script>
+  </body>
+</html>
