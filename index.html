@@ -45,7 +45,9 @@
       websocket.onopen = () => {
         setConnectionStatus('OPENED')
         addNewLogEntry('Connection is opened')
-        websocket.send("Hello WebSocketServer")
+        const message = 'Hello WebSocket Server'
+        addNewLogEntry(`Sent message from client: "${message}"`)
+        websocket.send(message)
       }
 
       websocket.onclose = event => {
@@ -54,7 +56,7 @@
       }
 
       websocket.onmessage = event => {
-        addNewLogEntry(`Message from server: "${event.data}"`)
+        addNewLogEntry(`Received message from server: "${event.data}"`)
       }
 
       websocket.onerror = error => {
