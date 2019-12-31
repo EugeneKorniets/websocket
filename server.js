@@ -1,4 +1,4 @@
-const fs = require('fs')
+const { readFileSync } = require('fs')
 const http = require('http')
 const ws = require('ws')
 
@@ -7,7 +7,7 @@ const wss = new ws.Server({
 })
 
 function sendPage (res) {
-  const indexPage = fs.readFileSync('./index.html')
+  const indexPage = readFileSync('./index.html')
   res.setHeader('Content-Type', 'text/html')
   res.end(indexPage)
 }
@@ -30,6 +30,7 @@ function accept(req, res) {
 
 function onConnect(ws) {
   console.info('client connect')
+
   ws.on('message', message => {
     console.info(`Message from client: "${message}"`)
 
